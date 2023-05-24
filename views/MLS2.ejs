@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Money Laundering Simulator 2!!!!!!!!!</title>
+    <audio id="audio1" loop="true">
+      <source id="audioSource" src="audio\police.ogg" type="audio/ogg">
+    </audio>
+
+    
+
+    <style>
+      body {
+        background-color: lime;
+        display: flex;
+      
+      }
+      #clicker {
+        width: 200px;
+        height: 200px;
+      }
+      #stats {
+        flex-grow: 100;
+        align-items: right;
+        margin-left: 700px;
+      }
+      /* Style the button that is used to open and close the collapsible content */
+      .collapsible {
+        background-color: rgb(20, 107, 2);
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        margin-left: auto;
+      }
+
+      /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+      .active, .collapsible:hover {
+        background-color:rgb(20, 107, 2);
+      }
+
+      /* Style the collapsible content. Note: hidden by default */
+      .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: rgb(32, 158, 7);
+      }
+    </style>
+  </head>
+  <body onload="getData()">
+    <audio id="audio1" loop="true">
+      <source id="audioSource" src="audio\police.ogg" type="audio/ogg">
+    </audio>
+    <audio id="audio2" loop="true">
+      <source id="audioSource" src="audio\anomaly.ogg" type="audio/ogg">
+    </audio>
+    <audio id="audio3" loop="true">
+      <source id="audioSource" src="audio\gru.ogg" type="audio/ogg">
+    </audio>
+    <div id="main">
+      <div id="clickArea">
+        <h1>Money Laundering Simulator 2!!!!!!!</h1>
+      <p> Click the image to earn money...</p>
+      <input type="image" onclick="addMoney()" src="https://cdn.shopify.com/s/files/1/1061/1924/products/Money_Bag_Emoji_large.png?v=1571606064" id="clicker"></input>
+      <p id="lol">You have 0 dollars.</p>
+      </div>
+      <div id="upgrades">
+        <div id="coolPrinter">
+          <h3>Cool Printer</h3>
+          <p>A printer that increases your money per click (MPC) by 1</p>
+          <audio id="pBuy">
+            <source src="audio\Lego Building Sound Effect.ogg" type="audio/ogg">
+          </audio>
+          <input type="submit" value="cost: 10" id="cPrinter">
+        </div>
+        <div id="multiplier">
+          <h3>Basic Multiplier</h3>
+          <p>Adds 1 more times of a multiplier. Hello everybody my name is Multiplier here and welcome back to...</p>
+          <audio id="mBuy">
+            <source src="audio\Lego Building Sound Effect.ogg" type="audio/ogg">
+          </audio>
+          <input type="submit" value="cost: 100" id="multi">
+        </div>
+      </div>
+    </div>
+    <div id="stats">
+      <button type="button" class="collapsible">Check Stats</button>
+        <div class="content">
+          <p id="dillah">Total Dillah Gained: 0</p>
+          <p id="mpc">Money Per Click: 0</p>
+          <p id="mp">Multiplier: 0</p>
+          <p id="rs">Raids Survived: 0</p>
+        </div>
+        <input type="submit" value="Save!" onclick="save()">
+    </div>
+    
+    
+    
+    <script>
+      //Dillah
+      var money
+      var mpc
+      var printerCost 
+      var multiCost 
+      var multiplier 
+      var totalDillah
+      if (localStorage.length == 0) {
+        var money = 0
+        var mpc = 1
+        var printerCost = 10
+        var multiCost = 100
+        var multiplier = 1
+        var totalDillah = 0
+        console.log('no data found')
+        console.log(localStorage.length)
+      } else {
+        getData()
+      }
+      function getData() {
+       
+          var money = Number(localStorage.getItem('money'))
+          var mpc = Number(localStorage.getItem('mpc'))
+          var printerCost = Number(localStorage.getItem('printerCost'))
+          var multiCost = Number(localStorage.getItem('multiCost'))
+          var multi = Number(localStorage.getItem('multi'))
+          var totalDillah = Number(localStorage.getItem('totalDillah'))
+          var raidsSurvived = Number(localStorage.getItem('raidsSurvived'))
+          console.log('data found') 
+          console.log(money)
+          
+        }
+      
+      
+
+      //Raids
+      let raidsSurvived = 0
+      let clicks = 0
+      let fbiRaid = false
+      let anomalyRaid = false
+      let gruRaid = false
+
+      let cPrinter = document.getElementById('cPrinter')
+      let multi = document.getElementById('multi')
+      let clicker = document.getElementById('clicker')
+      let mBuy = document.getElementById('mBuy')
+      let pBuy = document.getElementById('pBuy')
+      
+      //audio players
+      let player1 = document.getElementById('audio1')
+      let player2 = document.getElementById('audio2')
+      let player3 = document.getElementById('audio3')
+
+      
+
+      multi.addEventListener('click', () => {
+        console.log('lol')
+        if (money >= multiCost && fbiRaid == false && anomalyRaid == false && gruRaid == false) {
+          console.log('in')
+          addMulti(1)
+          money -= multiCost
+          multiCost = multiCost * 10
+          multi.value = `cost: ${multiCost}`
+          mBuy.play()
+        }
+        
+      })
+      
+      cPrinter.addEventListener('click', () => {
+        if (money >= printerCost && fbiRaid == false && anomalyRaid == false && gruRaid == false) {
+          addMPC(1)
+          money -= printerCost
+          printerCost = printerCost * 2
+          cPrinter.value = `cost: ${printerCost}`
+          pBuy.play()
+
+        }
+      })
+
+      
+      
+      function addMoney() {
+        if (fbiRaid == false && anomalyRaid == false && gruRaid == false) {
+          money += mpc * multiplier 
+          totalDillah += mpc * multiplier
+        }
+        if (fbiRaid == true || gruRaid == true) {
+          clicks -= 1
+        }
+        if (anomalyRaid == true) {
+          clicks -= 5
+        }
+      }
+
+      function addMPC(added) {
+        mpc = mpc + added
+      }
+
+      function addMulti(added) {
+        multiplier = multiplier + added
+      }
+
+      function stealDillah(stolen) {
+        money -= stolen
+      }
+      
+      function updateText() {
+        lol = document.getElementById('lol')
+        console.log(money)
+        lol.innerHTML = `You have ${money} dollars.`
+
+        if (fbiRaid == true) {
+          lol.innerHTML = `The FBI are here! You must click ${clicks} more times to eliminate them!`
+        }
+        if (anomalyRaid == true) {
+          lol.innerHTML = `What the ****?! These are anomalies attacking us! For some reason, the FBI has offered assistance in this otherworldly problem! Use your newfound alliance and click ${clicks} more times to eradicate these monsters!!!! (One click is worth 5 with this alliance)`
+        }
+        if (gruRaid == true) {
+          lol.innerHTML = `The GRU are here. They're taking our money! Eliminate them by clicking ${clicks} more times`
+        }
+        if (clicks <= 0 && fbiRaid == true) {
+          player1.pause()
+          fbiRaid = false
+          clicker.src = "https://cdn.shopify.com/s/files/1/1061/1924/products/Money_Bag_Emoji_large.png?v=1571606064"
+          raidsSurvived += 1
+        }
+        if (clicks <= 0 && anomalyRaid == true) {
+          player2.pause()
+          anomalyRaid = false
+          clicker.src = "https://cdn.shopify.com/s/files/1/1061/1924/products/Money_Bag_Emoji_large.png?v=1571606064"
+          raidsSurvived += 1
+        }
+        if (clicks <= 0 && gruRaid == true) {
+          player3.pause()
+          gruRaid = false
+          clicker.src = "https://cdn.shopify.com/s/files/1/1061/1924/products/Money_Bag_Emoji_large.png?v=1571606064"
+          raidsSurvived += 1
+        }
+      }
+
+      function save() {
+        localStorage.setItem('money', Number(money))
+        localStorage.setItem('mpc', Number(mpc))
+        localStorage.setItem('printerCost', Number(printerCost))
+        localStorage.setItem('multiCost', Number(multiCost))
+        localStorage.setItem('multi', Number(multi))
+        localStorage.setItem('totalDillah', Number(totalDillah))
+        localStorage.setItem('raidsSurvived', Number( raidsSurvived))
+        console.log("Data Saved!")
+      }
+
+
+
+      function raid() {
+        
+          if (fbiRaid == false && anomalyRaid == false && gruRaid == false) {
+            let val = Math.floor((Math.random() * 3) + 1)
+            console.log(val)
+          if (val == 1) {
+                fbiRaid = true
+                clicks = 100
+                clicker.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg/300px-Seal_of_the_Federal_Bureau_of_Investigation.svg.png"
+                player1.play()
+                } 
+          if (val == 2) {
+                anomalyRaid = true
+                clicks = 1000
+                clicker.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Biohazard_symbol.svg/1200px-Biohazard_symbol.svg.png"
+                player2.play() 
+                }
+          if (val == 3) {
+                gruRaid = true
+                clicks = 50
+                clicker.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Emblem_of_the_GRU.svg/1200px-Emblem_of_the_GRU.svg.png"
+                player3.play() 
+                }
+        }
+        }
+
+        function gru() {
+          if (gruRaid == true) {
+            stealDillah(20)
+          }
+        }
+        
+        
+      
+      //code for collapsible below
+      var coll = document.getElementsByClassName("collapsible");
+      let dillah = document.getElementById("dillah");
+      let mpcCounter = document.getElementById("mpc");
+      let mp = document.getElementById("mp");
+      let rs = document.getElementById("rs");
+      var i;
+
+      for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var content = this.nextElementSibling;
+          if (content.style.display === "block") {
+            content.style.display = "none";
+          } else {
+            content.style.display = "block";
+          }
+          rs.innerHTML = "Raids Survived: " + String(raidsSurvived)
+          dillah.innerHTML = "Total Dillah Gained: " + String(totalDillah)
+          mp.innerHTML = "Multiplier: " + String(multiplier) + 'x'
+          mpcCounter.innerHTML = "Money Per Click: " + String(mpc)
+        });
+      }
+      
+
+      setInterval(updateText, 1);
+      setInterval(raid, 60000)
+      setInterval(gru, 1000)
+      
+    </script>
+  </body>
+</html>
